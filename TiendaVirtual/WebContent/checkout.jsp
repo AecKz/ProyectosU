@@ -21,6 +21,15 @@
 <script src="static/js/jquery.magnific-popup.js" type="text/javascript"></script>
 <link href="static/css/magnific-popup.css" rel="stylesheet" type="text/css">
 		<script>
+		var id = "";
+		var pedidoId = "";
+		var formaPago = "";
+		var totalPedido = "";
+		var totalImpuestos = "";
+		var totalEnvio = "";
+		var totalVenta = "";
+		var estado = "";		
+		var tipoConsulta = "";
 			$(document).ready(function() {
 				$('.popup-with-zoom-anim').magnificPopup({
 					type: 'inline',
@@ -33,6 +42,93 @@
 					removalDelay: 300,
 					mainClass: 'my-mfp-zoom-in'
 			});
+				
+				$.ajax({
+					url : '../TiendaVirtual/PedidoController',
+					data : {
+						"usuarioId":"1",
+						"tipoConsulta" : "encontrarActivosUsuario"
+					},
+					type : 'POST',
+					datatype : 'json',
+					success : function(data) {
+						if(data.numRegistros > 0){
+							var listadoPedidos = data.listadoPedidos;
+							$.each(listadoPedidos, function(index){
+								$("#dataTableContent").append("	<tr class='odd gradeX'>" +
+										" <td relation='producto'>"+ listadoPedidos[index].producto +"</td>" +
+										" <td relation='precioPublico'>"+ listadoPedidos[index].precioPublico +"</td>" +
+										" <td relation='fecha'>"+ listadoPedidos[index].fecha +"</td>" +
+										" <td width='175px'>" +
+											" <input type='hidden' value='"+ listadoPedidos[index].id +"'/>" +
+											" <button type='button' class='btn btn-success btn-xs actualizar-btn'>" +
+			  									" Actualizar" +
+											" </button>" +
+											" <button type='button' class='btn btn-danger btn-xs eliminar-btn'>" +
+											  	"<span id='delete-record'></span> Eliminar" +
+											" </button>" +
+										"</td>" +
+									"</tr>");						
+							});
+							/* Inicio Controles Actualizar Registro*/
+							$(".actualizar-btn").bind({click: function() {
+									$("#addButton").trigger("click");
+									$("#codigo").val($(this).parent().children().first().val());
+									var elem = $(this).parent();
+									var bandera = 1;
+									do {
+										elem = elem.prev();
+										if (elem.is("td")){
+											var elemCode = elem.attr("relation");
+											elementType(elem.text(), elemCode, $("#"+elemCode).attr("type"));
+										}else {
+											bandera = 0;
+										}
+									} while (bandera == 1);
+								  }
+							});
+							/* Fin Controles Actualizar Registro*/
+							
+							/* Inicio Controles Elminar Registro */
+							$(".eliminar-btn").bind({click: function() {
+									var r = confirm("Seguro que desea eliminar el articulo? " + $(this).parent().parent().children().first().text());
+									if (r == true){
+										codigo = $(this).parent().children().first().val();
+										tipoConsulta = "eliminar";
+										$(this).parent().parent().remove();
+									}
+								}
+							});	
+							/* Fin Controles Elminar Registro */
+						}else{
+							$("#dataTableContent").append("<tr><td colspan='4'>No existen Registros</td></tr>");
+						}
+					}
+				});
+				
+				$("#pagar").click(function() {
+					tipoConsulta = "crear";
+					$.ajax({
+						url : '../TiendaVirtual/VentaController',
+						data : {
+							"pedidoId" : 1,
+							"formaPago" : "EFECTIVO",
+							"totalPedido" : 15,
+							"totalImpuestos" : 2,
+							"totalEnvio" : 0,
+							"totalVenta" : 17,
+							"estado" : "1",							
+							"tipoConsulta" : tipoConsulta
+						},
+						type : 'POST',
+						datatype : 'json',
+						success : function (data) {
+							alert("Vendido con Exito!");
+							alert("La factura será enviada a su email.");
+							window.location = "index.jsp";
+						}
+					});
+				});
 		});
 		</script>
 <!----details-product-slider--->
@@ -96,8 +192,35 @@
     <div class="main">
 	   <div class="container">
 		   <div class="register">
-		  	  <h4 class="title">Shopping cart is empty</h4>
-		  	  <p class="cart">You have no items in your shopping cart.<br>Click<a href="index.jsp"> here</a> to continue shopping</p>
+		   
+		   	<!-- Datatable -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive">
+				<div class="input-group"> <span class="input-group-addon">Filter</span>
+				    <input id="filter" type="text" class="form-control" placeholder="Escriba la palabra a buscar...">
+				</div>			
+				<table class="table table-striped table-bordered table-hover"
+					id="dataTable">
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Precio</th>
+							<th>Fecha</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id="dataTableContent" class="searchable">										
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- Datatable -->			
+	<button type="button" class="btn btn-primary" id="pagar">PAGAR</button>   
+		   
+<!-- 		  	  <h4 class="title">Shopping cart is empty</h4> -->
+<!-- 		  	  <p class="cart">You have no items in your shopping cart.<br>Click<a href="index.jsp"> here</a> to continue shopping</p> -->
 		   </div>
 	     </div>
 	    </div>

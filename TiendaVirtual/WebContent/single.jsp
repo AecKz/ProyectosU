@@ -22,6 +22,10 @@
 <script src="static/js/jquery.magnific-popup.js" type="text/javascript"></script>
 <link href="static/css/magnific-popup.css" rel="stylesheet" type="text/css">
 		<script>
+		var id = "";
+		var productoId = "";
+		var usuarioId = "";
+		var tipoConsulta = "";
 			$(document).ready(function() {
 				$('.popup-with-zoom-anim').magnificPopup({
 					type: 'inline',
@@ -34,6 +38,32 @@
 					removalDelay: 300,
 					mainClass: 'my-mfp-zoom-in'
 			});
+			
+			//Carrito de Compras
+			
+			$("#agregarCarrito").click(function() {
+				id = $("#id").val();
+				productoId = $("#productoId").val();
+				usuarioId = $("#usuarioId").val();
+				tipoConsulta = "crear";
+				$.ajax({
+					url : '../TiendaVirtual/PedidoController',
+					data : {
+						"id" : id,
+						"productoId" : 1,
+						"usuarioId" : 1,
+						"estado" : 1,
+						"tipoConsulta" : tipoConsulta
+					},
+					type : 'POST',
+					datatype : 'json',
+					success : function (data) {
+						alert("Agregado al Carrito!");
+					}
+				});
+			});
+			
+							
 		});
 		</script>
 <!----details-product-slider--->
@@ -306,7 +336,8 @@
 			    </ul>
 			    <div class="btn_form">
 				   <form>
-					 <input type="submit" value="Add to Cart" title="">
+				   <button type="button" class="btn btn-primary" id="agregarCarrito">ADD TO CART</button>
+				    
 				  </form>
 				</div>
 			</div>

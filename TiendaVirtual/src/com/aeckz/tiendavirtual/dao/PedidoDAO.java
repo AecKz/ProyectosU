@@ -6,10 +6,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import com.aeckz.tiendavirtual.entitymanagerfactory.EntityManagerFactoryDAO;
-import com.aeckz.tiendavirtual.model.Usuario;
+import com.aeckz.tiendavirtual.model.Pedido;
 
-public class UsuarioDAO extends EntityManagerFactoryDAO {
-	public Usuario crear(Usuario objeto) {
+public class PedidoDAO extends EntityManagerFactoryDAO {
+	public Pedido crear(Pedido objeto) {
 		EntityManager em = obtenerEntityManagerFactory().createEntityManager();
 		try {
 			em.getTransaction().begin();
@@ -27,7 +27,7 @@ public class UsuarioDAO extends EntityManagerFactoryDAO {
 		}
 	}
 
-	public Usuario editar(Usuario objeto) {
+	public Pedido editar(Pedido objeto) {
 		EntityManager em = obtenerEntityManagerFactory().createEntityManager();
 		try {
 			em.getTransaction().begin();
@@ -43,13 +43,13 @@ public class UsuarioDAO extends EntityManagerFactoryDAO {
 		}
 	}
 
-	public Usuario eliminar(Usuario objeto) {
+	public Pedido eliminar(Pedido objeto) {
 		EntityManager em = obtenerEntityManagerFactory().createEntityManager();
 		try {
 			em.getTransaction().begin();
-			Usuario UsuarioToBeRemoved = em.getReference(Usuario.class,
+			Pedido PedidoToBeRemoved = em.getReference(Pedido.class,
 					objeto.getId());
-			em.remove(UsuarioToBeRemoved);
+			em.remove(PedidoToBeRemoved);
 			em.getTransaction().commit();
 			return objeto;
 		} catch (Exception e) {
@@ -61,55 +61,51 @@ public class UsuarioDAO extends EntityManagerFactoryDAO {
 		}
 	}
 
-	public List<Usuario> buscarTodos() {
+	public List<Pedido> buscarTodos() {
 		EntityManager em = obtenerEntityManagerFactory().createEntityManager();
 		try {
-			TypedQuery<Usuario> query = em.createQuery(
-					"SELECT u FROM Usuario u", Usuario.class);
-			List<Usuario> results = query.getResultList();
+			TypedQuery<Pedido> query = em.createQuery(
+					"SELECT p FROM Pedido p order by p.fechaingreso", Pedido.class);
+			List<Pedido> results = query.getResultList();
 			return results;
 		} finally {
 			em.close();
 		}
 	}
 
-	public Usuario buscarPorId(String id) {
+	public Pedido buscarPorId(String id) {
 		EntityManager em = obtenerEntityManagerFactory().createEntityManager();
-		Usuario usuario = new Usuario();
+		Pedido pedido = new Pedido();
 		try {
-			TypedQuery<Usuario> query = em.createQuery(
-					"SELECT u FROM Usuario u where u.id = :id ", Usuario.class)
+			TypedQuery<Pedido> query = em.createQuery(
+					"SELECT p FROM Pedido p where p.id = :id ", Pedido.class)
 					.setParameter("id", Integer.parseInt(id));
-			List<Usuario> results = query.getResultList();
-			usuario = results.get(0);
-			return usuario;
+			List<Pedido> results = query.getResultList();
+			pedido = results.get(0);
+			return pedido;
 		} catch (Exception e) {
 			em.getTransaction().rollback();
 			System.out.println(e.getMessage());
-			return usuario;
+			return pedido;
 		} finally {
 			em.close();
 		}
 	}
-
-	public String login(String login, String clave) {
+	//Lista Carrito de Compras
+	public List<Pedido> buscarActivosUsuario (String usuarioId) {
 		EntityManager em = obtenerEntityManagerFactory().createEntityManager();
-		String resultado = "0";
 		try {
-			TypedQuery<Usuario> query = em.createQuery(
-					"SELECT u FROM Usuario u where u.login = :login and u.clave = :clave", Usuario.class)
-					.setParameter("login", login).setParameter("clave", clave);
-			List<Usuario> results = query.getResultList();
-			if(results.size()>0){
-				resultado = "1";				
-			}
-			return resultado;
+			TypedQuery<Pedido> query = em.createQuery(
+					"SELECT p FROM Pedido p where p.usuario.id = :id", Pedido.class)
+					.setParameter("id", Integer.parseInt(usuarioId));
+			List<Pedido> results = query.getResultList();			
+			return results;
 		} catch (Exception e) {
 			em.getTransaction().rollback();
 			System.out.println(e.getMessage());
-			return resultado;
 		} finally {
 			em.close();
 		}
+		return null;
 	}
 }

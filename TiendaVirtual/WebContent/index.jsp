@@ -35,23 +35,7 @@
 			midClick: true,
 			removalDelay: 300,
 			mainClass: 'my-mfp-zoom-in'
-	});		
-		$.ajax({
-			url : '../TiendaVirtual/EntidadController',
-			data : {
-				"tipoConsulta" : "encontrarTodos"
-			},
-			type : 'POST',
-			datatype : 'json',
-			success : function(data) {
-				if (data.numRegistros > 0) {
-					var listadoEntidades = data.listadoEntidades;
-					$.each(listadoEntidades, function(index) {
-						alert(listadoEntidades[index].nombre);
-					});
-				}
-			}
-		});
+	});	
 	});
 </script>
 </head>

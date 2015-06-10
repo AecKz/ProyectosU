@@ -9,7 +9,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-    <servlet>
+  <servlet>
     <servlet-name>com.aeckz.tiendavirtual.controller.EntidadController</servlet-name>
     <servlet-class>com.aeckz.tiendavirtual.controller.EntidadController</servlet-class>
   </servlet>
@@ -24,5 +24,21 @@
   <servlet-mapping>
     <servlet-name>com.aeckz.tiendavirtual.controller.UsuarioController</servlet-name>
     <url-pattern>/UsuarioController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>com.aeckz.tiendavirtual.controller.PedidoController</servlet-name>
+    <servlet-class>com.aeckz.tiendavirtual.controller.PedidoController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>com.aeckz.tiendavirtual.controller.PedidoController</servlet-name>
+    <url-pattern>/PedidoController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>com.aeckz.tiendavirtual.controller.VentaController</servlet-name>
+    <servlet-class>com.aeckz.tiendavirtual.controller.VentaController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>com.aeckz.tiendavirtual.controller.VentaController</servlet-name>
+    <url-pattern>/VentaController</url-pattern>
   </servlet-mapping>
 </web-app>
